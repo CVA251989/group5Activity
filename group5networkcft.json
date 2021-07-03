@@ -1,0 +1,206 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "",
+    "Metadata": {
+
+    },
+    "Parameters": {
+      "gp5vpccidr": {
+          "Description": "provide a cidr for vpc",
+          "Type": "String"
+      },
+      "gp5PublicSubnetAZ": {
+          "Description": "Select AZ for Subnet",
+          "Type": "AWS::EC2::AvailabilityZone::Name"
+      },
+      "gp5PublicSubnetCidr": {
+          "Description": "Provide a Cidr Public Subnet 1",
+          "Type": "String"
+      },
+"gp5PublicSubnetCidr2": {
+    "Description": "Select Cidr For Public Subnet 2",
+    "Type": "String"
+
+},
+"gp5PublicSubnetAZ2": {
+    "Description": "Select AZ For Public Subnet 2",
+    "Type": "AWS::EC2::AvailabilityZone::Name"
+},
+"gp5PrivateSubnetAZ": {
+    "Description": "Select AZ For Private Subnet",
+    "Type": "AWS::EC2::AvailabilityZone::Name"
+},
+"gp5PrivateSubnetCidr": {
+    "Description": "Provide Cidr for Private Subnet",
+    "Type": "String"
+},
+"gp5PrivateSubnetAZ2": {
+    "Description": "Select AZ For Private Subnet 2",
+    "Type": "AWS::EC2::AvailabilityZone::Name"
+},
+"gp5PrivateSubnetCidr2": {
+    "Description": "Provide Cidr Block for Private Subnet 2",
+    "Type": "String"
+},
+"gp5RouteDestinationCidr": {
+    "Description": "Provide Destination Cidr Block",
+    "Type": "String",
+    "Default": "0.0.0.0/0"
+}
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+      "gp5vpc": {
+        "Type": "AWS::EC2::VPC",
+        "Properties": {
+          "CidrBlock": { "Ref": "gp5vpccidr" },
+          "Tags": [{ "Key": "Name", "Value":  "gp5vpc" }]
+        }
+      },
+      "gp5IGW": {
+        "Type": "AWS::EC2::InternetGateway",
+        "Properties": {
+          "Tags": [{ "Key": "Name", "Value":  "gp5IGW" }]
+        }
+      },
+      "AttachGateway": {
+        "Type": "AWS::EC2::VPCGatewayAttachment",
+        "Properties": {
+          "VpcId": { "Ref": "gp5vpc" },
+          "InternetGatewayId": { "Ref": "gp5IGW" }
+        }
+      },
+      "gp5PublicSubnet": {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": { "Ref": "gp5PublicSubnetAZ" },
+          "VpcId": { "Ref": "gp5vpc" },
+          "CidrBlock": { "Ref": "gp5PublicSubnetCidr" },
+          "Tags": [{ "Key": "Name", "Value":  "gp5PublicSubnet" }]
+        }
+      },
+      "gp5PublicSubnet2": {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": { "Ref": "gp5PublicSubnetAZ2" },
+          "VpcId": { "Ref": "gp5vpc" },
+          "CidrBlock": { "Ref": "gp5PublicSubnetCidr2" },
+          "Tags": [{ "Key": "Name", "Value":  "gp5PublicSubnet2" }]
+        }
+      },
+      "gp5PrivateSubnet": {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": { "Ref": "gp5PrivateSubnetAZ" },
+          "VpcId": { "Ref": "gp5vpc" },
+          "CidrBlock": { "Ref": "gp5PrivateSubnetCidr" },
+          "Tags": [{ "Key": "Name", "Value":  "gp5PrivateSubnet" }]
+        }
+      },
+      "gp5PrivateSubnet2": {
+        "Type": "AWS::EC2::Subnet",
+        "Properties": {
+          "AvailabilityZone": { "Ref": "gp5PrivateSubnetAZ2" },
+          "VpcId": { "Ref": "gp5vpc" },
+          "CidrBlock": { "Ref": "gp5PrivateSubnetCidr2" },
+          "Tags": [{ "Key": "Name", "Value":  "gp5PrivateSubnet2" }]
+        }
+      },
+      "gp5PublicSubnetRT": {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": { "Ref": "gp5vpc" },
+          "Tags": [{ "Key": "Name", "Value":  "gp5PublicSubnetRT" }]
+        }
+      },
+      "gp5PrivateSubnetRT": {
+        "Type": "AWS::EC2::RouteTable",
+        "Properties": {
+          "VpcId": { "Ref": "gp5vpc" },
+          "Tags": [{ "Key": "Name", "Value":  "gp5PrivateSubnetRT" }]
+        }
+      },
+      "gp5PublicRTAsso": {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": { "Ref": "gp5PublicSubnet" },
+          "RouteTableId": { "Ref": "gp5PublicSubnetRT" }
+        }
+      },
+      "gp5PublicSubnetRTAsso2": {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": { "Ref": "gp5PublicSubnet2" },
+          "RouteTableId": { "Ref": "gp5PublicSubnetRT" }
+        }
+      },
+      "gp5PrivateSubnetRTAsso": {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": { "Ref": "gp5PrivateSubnet" },
+          "RouteTableId": { "Ref": "gp5PrivateSubnetRT" }
+        }
+      },
+      "gp5PrivateSubnetRTAsso2": {
+        "Type": "AWS::EC2::SubnetRouteTableAssociation",
+        "Properties": {
+          "SubnetId": { "Ref": "gp5PrivateSubnet2" },
+          "RouteTableId": { "Ref": "gp5PrivateSubnetRT" }
+        }
+      },
+      "gp5Route": {
+        "Type": "AWS::EC2::Route",
+        "Properties": {
+          "RouteTableId": { "Ref": "gp5PublicSubnetRT" },
+          "DestinationCidrBlock": { "Ref": "gp5RouteDestinationCidr" },
+          "GatewayId": { "Ref": "gp5IGW" }
+        }
+      }
+
+    },
+    "Outputs": {
+  "gp5NetworkStackID" : {
+    "Description" : "VPC for gp5vpc",
+    "Value" : { "Ref": "gp5vpc" },
+    "Export" : {
+      "Name" : "gp5NetworkStackID"
+    }
+  },
+  "gp5WebServerPublicSubnetID" : {
+    "Description" : "gp5vpc Webserver Public Subnet 1",
+    "Value" : { "Ref": "gp5PublicSubnet" },
+    "Export" : {
+      "Name" : "gp5WebServerPublicSubnetID"
+  }
+},
+"gp5WebServerPublicSubnetID2" : {
+  "Description" : "gp5 Webserver Public Subnet",
+  "Value" : { "Ref": "gp5PublicSubnet2" },
+  "Export" : {
+    "Name" : "gp5WebServerPublicSubnetID2"
+  }
+},
+"gp5APPServerPrivateSubnetID" : {
+  "Description" : "gp5 Appserver Private Subnet 1",
+  "Value" : { "Ref": "gp5PrivateSubnet" },
+  "Export" : {
+    "Name" : "gp5AppServerPrivateSubnetID"
+
+      }
+
+    },
+       "gp5APPServerPrivateSubnetID2" : {
+         "Description" : "gp5 Appserver Private Subnet 2",
+         "Value" : { "Ref": "gp5PrivateSubnet2" },
+         "Export" : {
+           "Name" : "gp5AppServerPrivateSubnetID2"
+
+                }
+              }
+            }
+          }
